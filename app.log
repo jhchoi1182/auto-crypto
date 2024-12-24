@@ -1,0 +1,118 @@
+2024-12-24 14:08:16,084 - INFO - ====== WebDriver manager ======
+2024-12-24 14:08:16,471 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:08:18,846 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:08:20,359 - INFO - Driver [/Users/choejihyeon/.wdm/drivers/chromedriver/mac64/131.0.6778.204/chromedriver-mac-arm64/chromedriver] found in cache
+2024-12-24 14:08:30,586 - INFO - CSV 파일 읽기 완료: 2024-12-24T05-08_export.csv
+2024-12-24 14:08:30,586 - INFO - 행 수: 563
+2024-12-24 14:08:30,586 - INFO - 열 이름: ['Unnamed: 0', 'id', 'timestamp', 'decision', 'percentage', 'reason', 'btc_balance', 'krw_balance', 'btc_avg_buy_price', 'btc_krw_price', 'reflection']
+2024-12-24 14:08:30,595 - INFO - 첫 5행:
+   Unnamed: 0  id                   timestamp  ... btc_avg_buy_price  btc_krw_price                                         reflection
+0           0   1  2024-09-17T04:01:36.739393  ...      7.817600e+07       78176000  **1. Brief Reflection on Recent Trading Decisi...
+1           1   2  2024-09-17T08:01:03.146312  ...      7.822085e+07       78285000  **1. Reflection on Recent Trading Decisions:**...
+2           2   3  2024-09-17T12:00:57.134792  ...      7.822474e+07       78245000  **1. Reflection on Recent Trading Decisions:**...
+3           3   4  2024-09-17T16:01:00.298295  ...      7.822474e+07       78799000  **1. Reflection on Recent Trading Decisions:**...
+4           4   5  2024-09-17T20:00:49.655438  ...      7.858196e+07       79658000  **1. Reflection on Recent Trading Decisions:**...
+
+[5 rows x 11 columns]
+2024-12-24 14:08:30,605 - INFO - 기본 통계 정보:
+       Unnamed: 0          id  percentage  btc_balance   krw_balance  btc_avg_buy_price  btc_krw_price
+count  563.000000  563.000000  563.000000   563.000000  5.630000e+02       5.630000e+02   5.630000e+02
+mean   281.000000  282.000000   28.898757     0.012368  1.009837e+06       1.090140e+08   1.109602e+08
+std    162.668374  162.668374   19.018030     0.005629  6.030413e+05       2.735944e+07   2.448019e+07
+min      0.000000    1.000000    0.000000     0.000000  4.237923e+03       0.000000e+00   7.817600e+07
+25%    140.500000  141.500000   20.000000     0.008440  5.397352e+05       8.486601e+07   8.628600e+07
+50%    281.000000  282.000000   30.000000     0.012670  9.753036e+05       9.956440e+07   1.008500e+08
+75%    421.500000  422.500000   40.000000     0.016755  1.432767e+06       1.341134e+08   1.346275e+08
+max    562.000000  563.000000  100.000000     0.024422  2.511591e+06       1.541704e+08   1.567560e+08
+2024-12-24 14:10:24,602 - INFO - ====== WebDriver manager ======
+2024-12-24 14:10:25,007 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:10:25,341 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:10:25,622 - INFO - Driver [/Users/choejihyeon/.wdm/drivers/chromedriver/mac64/131.0.6778.204/chromedriver-mac-arm64/chromedriver] found in cache
+2024-12-24 14:10:27,285 - ERROR - Error occurred: Message: session not created
+from disconnected: unable to connect to renderer
+Stacktrace:
+0   chromedriver                        0x0000000102c13184 cxxbridge1$str$ptr + 3626716
+1   chromedriver                        0x0000000102c0b9d4 cxxbridge1$str$ptr + 3596076
+2   chromedriver                        0x0000000102678968 cxxbridge1$string$len + 89228
+3   chromedriver                        0x00000001026ade34 cxxbridge1$string$len + 307544
+4   chromedriver                        0x00000001026a9650 cxxbridge1$string$len + 289140
+5   chromedriver                        0x00000001026a5828 cxxbridge1$string$len + 273228
+6   chromedriver                        0x00000001026e6128 cxxbridge1$string$len + 537676
+7   chromedriver                        0x00000001026e5a70 cxxbridge1$string$len + 535956
+8   chromedriver                        0x00000001026b1568 cxxbridge1$string$len + 321676
+9   chromedriver                        0x00000001026b21b8 cxxbridge1$string$len + 324828
+10  chromedriver                        0x0000000102bde9ac cxxbridge1$str$ptr + 3411716
+11  chromedriver                        0x0000000102be1ccc cxxbridge1$str$ptr + 3424804
+12  chromedriver                        0x0000000102bc586c cxxbridge1$str$ptr + 3308996
+13  chromedriver                        0x0000000102be258c cxxbridge1$str$ptr + 3427044
+14  chromedriver                        0x0000000102bb709c cxxbridge1$str$ptr + 3249652
+15  chromedriver                        0x0000000102bfc4b8 cxxbridge1$str$ptr + 3533328
+16  chromedriver                        0x0000000102bfc634 cxxbridge1$str$ptr + 3533708
+17  chromedriver                        0x0000000102c0b648 cxxbridge1$str$ptr + 3595168
+18  libsystem_pthread.dylib             0x0000000197fef2e4 _pthread_start + 136
+19  libsystem_pthread.dylib             0x0000000197fea0fc thread_start + 8
+Traceback (most recent call last):
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/main.py", line 32, in read_root
+    driver = init_driver()
+             ^^^^^^^^^^^^^
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/selenium_settings.py", line 42, in init_driver
+    driver: WebDriver = webdriver.Chrome(service=Service(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/venv/lib/python3.11/site-packages/selenium/webdriver/chrome/webdriver.py", line 45, in __init__
+    super().__init__(
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/venv/lib/python3.11/site-packages/selenium/webdriver/chromium/webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/venv/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 241, in __init__
+    self.start_session(capabilities)
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/venv/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 329, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/venv/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 384, in execute
+    self.error_handler.check_response(response)
+  File "/Users/choejihyeon/Desktop/personal-projects/fastapi_selenium/venv/lib/python3.11/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from disconnected: unable to connect to renderer
+Stacktrace:
+0   chromedriver                        0x0000000102c13184 cxxbridge1$str$ptr + 3626716
+1   chromedriver                        0x0000000102c0b9d4 cxxbridge1$str$ptr + 3596076
+2   chromedriver                        0x0000000102678968 cxxbridge1$string$len + 89228
+3   chromedriver                        0x00000001026ade34 cxxbridge1$string$len + 307544
+4   chromedriver                        0x00000001026a9650 cxxbridge1$string$len + 289140
+5   chromedriver                        0x00000001026a5828 cxxbridge1$string$len + 273228
+6   chromedriver                        0x00000001026e6128 cxxbridge1$string$len + 537676
+7   chromedriver                        0x00000001026e5a70 cxxbridge1$string$len + 535956
+8   chromedriver                        0x00000001026b1568 cxxbridge1$string$len + 321676
+9   chromedriver                        0x00000001026b21b8 cxxbridge1$string$len + 324828
+10  chromedriver                        0x0000000102bde9ac cxxbridge1$str$ptr + 3411716
+11  chromedriver                        0x0000000102be1ccc cxxbridge1$str$ptr + 3424804
+12  chromedriver                        0x0000000102bc586c cxxbridge1$str$ptr + 3308996
+13  chromedriver                        0x0000000102be258c cxxbridge1$str$ptr + 3427044
+14  chromedriver                        0x0000000102bb709c cxxbridge1$str$ptr + 3249652
+15  chromedriver                        0x0000000102bfc4b8 cxxbridge1$str$ptr + 3533328
+16  chromedriver                        0x0000000102bfc634 cxxbridge1$str$ptr + 3533708
+17  chromedriver                        0x0000000102c0b648 cxxbridge1$str$ptr + 3595168
+18  libsystem_pthread.dylib             0x0000000197fef2e4 _pthread_start + 136
+19  libsystem_pthread.dylib             0x0000000197fea0fc thread_start + 8
+
+2024-12-24 14:11:49,387 - INFO - ====== WebDriver manager ======
+2024-12-24 14:11:49,634 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:11:49,799 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:11:49,924 - INFO - Driver [/Users/choejihyeon/.wdm/drivers/chromedriver/mac64/131.0.6778.204/chromedriver-mac-arm64/chromedriver] found in cache
+2024-12-24 14:11:58,970 - INFO - 마지막 행 정보:
+2024-12-24 14:11:58,970 - INFO - Decision: buy
+2024-12-24 14:11:58,970 - INFO - Percentage: 40
+2024-12-24 14:12:43,083 - INFO - ====== WebDriver manager ======
+2024-12-24 14:12:43,330 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:12:43,469 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:12:43,598 - INFO - Driver [/Users/choejihyeon/.wdm/drivers/chromedriver/mac64/131.0.6778.204/chromedriver-mac-arm64/chromedriver] found in cache
+2024-12-24 14:12:52,618 - INFO - 마지막 행 정보:
+2024-12-24 14:12:52,619 - INFO - Decision: buy
+2024-12-24 14:12:52,619 - INFO - Percentage: 40.0
+2024-12-24 14:13:24,873 - INFO - ====== WebDriver manager ======
+2024-12-24 14:13:25,108 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:13:25,232 - INFO - Get LATEST chromedriver version for google-chrome
+2024-12-24 14:13:25,358 - INFO - Driver [/Users/choejihyeon/.wdm/drivers/chromedriver/mac64/131.0.6778.204/chromedriver-mac-arm64/chromedriver] found in cache
+2024-12-24 14:13:34,175 - INFO - 마지막 행 정보:
+2024-12-24 14:13:34,175 - INFO - Decision: buy
+2024-12-24 14:13:34,175 - INFO - Percentage: 40.0
