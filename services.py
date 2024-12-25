@@ -90,7 +90,7 @@ def check_time_difference(last_timestamp):
     current_time = datetime.now(timezone.utc) + timedelta(hours=9)
     time_difference = current_time.replace(tzinfo=None) - last_time
 
-    if time_difference > timedelta(minutes=180):
+    if time_difference > timedelta(minutes=5):
         raise ValueError(f"마지막 타임스탬프가 현재 시간보다 5분 이상 지났습니다. 시간 차이: {time_difference}")
 
 
