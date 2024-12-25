@@ -9,7 +9,7 @@ from utils.logger_config import logger
 
 access_key = os.environ['ACCESS_KEY']
 secret_key = os.environ['SECRET_KEY']
-server_url = os.environ['SERVER_URL']
+server_url = os.environ['UPBIT_SERVER_URL']
 
 
 def get_accounts():

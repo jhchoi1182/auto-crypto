@@ -1,5 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
+from constants import SERVER_URL
 from utils.logger_config import logger
 
 
@@ -26,10 +27,10 @@ def start_scheduler():
 def auto_crypto():
     try:
         logger.info("스케줄 작업 실행: Upbit API 호출")
-        result = requests.get(f"http://121.163.246.222:10000/download-csv")
-        requests.post(f"http://121.163.246.222:10000/order", json={"csv_file_path": result.json()['csv_file_path']})
-        # result = requests.get(f"{SERVER_URL}/download-csv")
-        # requests.post(f"{SERVER_URL}/order", json={"csv_file_path": result.json()['csv_file_path']})
+        # result = requests.get(f"http://121.163.246.222:10000/download-csv")
+        # requests.post(f"http://121.163.246.222:10000/order", json={"csv_file_path": result.json()['csv_file_path']})
+        result = requests.get(f"{SERVER_URL}/download-csv")
+        requests.post(f"{SERVER_URL}/order", json={"csv_file_path": result.json()['csv_file_path']})
         logger.info(f"스케줄 작업 실행 완료: Upbit API 호출")
     except Exception as e:
         logger.error(f"스케줄된 작업 실행 중 오류 발생: {str(e)}")

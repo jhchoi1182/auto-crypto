@@ -65,6 +65,7 @@ def order_btc(payload: dict):
         return {"message": "투자 방향이 'hold'입니다. 투자하지 않습니다."}
 
     accounts = get_accounts()
+    logger.info(f"accounts?????: {accounts}")
     order_amount = calculate_order_amount(decision, percentage, accounts)
     # result = post_order(decision, order_amount)
     send_trade_email(last_row_data)
