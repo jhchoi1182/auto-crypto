@@ -1,7 +1,6 @@
 import time
 import os
 import pandas as pd
-import logging
 import numpy as np
 from datetime import datetime, timedelta
 from fastapi import FastAPI
@@ -9,16 +8,7 @@ from fastapi import FastAPI
 from selenium_utils.selenium_settings import init_driver
 from selenium_utils.actions import click_download_button
 from utils.utils import translate_text_to_korean
-
-# 로깅 설정
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('app.log'),
-        logging.StreamHandler()
-    ]
-)
+from utils.logger_config import logger
 
 app = FastAPI()
 
@@ -27,6 +17,7 @@ app = FastAPI()
 def test_csv():
     _, csv_file_path = check_safe_download()
     last_row_data = get_last_row_data(csv_file_path)
+    logger.info(f"번역된 이유: {translate_text_to_korean(last_row_data['reason'])}")
     return {"message": "CSV 파일 읽기 완료", "last_row_data": last_row_data}
 
 @app.get("/hi")
@@ -58,7 +49,7 @@ def auto_crypto():
 
     except Exception as e:
         # 이상 상황에 대해 알람을 울려야함
-        logging.error(f"Error occurred: {str(e)}", exc_info=True)
+        logger.error(f"Error occurred: {str(e)}", exc_info=True)
         return {"status": "error", "message": str(e)}
     finally:
         if driver:
@@ -102,12 +93,12 @@ def get_last_row_data(csv_file_path):
 
     # check_time_difference(last_timestamp)
 
-    logging.info(f"마지막 행 정보:")
-    logging.info(f"Decision: {last_decision}")
-    logging.info(f"Percentage: {last_percentage}")
-    logging.info(f"Timestamp: {last_timestamp}")
-    logging.info(f"Reason: {last_reason}")
-    logging.info(f"Reflection: {last_reflection}")
+    logger.info(f"마지막 행 정보:")
+    logger.info(f"Decision: {last_decision}")
+    logger.info(f"Percentage: {last_percentage}")
+    logger.info(f"Timestamp: {last_timestamp}")
+    logger.info(f"Reason: {last_reason}")
+    logger.info(f"Reflection: {last_reflection}")
 
     return {
         "decision": last_decision,
@@ -122,8 +113,8 @@ def check_time_difference(last_timestamp):
     last_time = datetime.fromisoformat(last_timestamp)
     current_time = datetime.now()
 
-    logging.info(f"마지막 타임스탬프: {last_time}")
-    logging.info(f"현재 시간: {current_time}")
+    logger.info(f"마지막 타임스탬프: {last_time}")
+    logger.info(f"현재 시간: {current_time}")
 
     time_difference = current_time - last_time
 
