@@ -62,7 +62,7 @@ def order_btc(payload: dict):
     percentage = float(last_row_data['percentage']) / 100
 
     if decision == 'hold':
-        send_trade_email(last_row_data)
+        return send_trade_email(last_row_data)
 
     accounts = get_accounts()
     logger.info(f"accounts?????: {accounts}")
