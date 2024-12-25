@@ -16,7 +16,7 @@ def start_scheduler():
     scheduler.add_job(
         auto_crypto,
         'interval',
-        seconds=30,
+        seconds=40,
         id='upbit_job'
     )
     scheduler.start()

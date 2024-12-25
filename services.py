@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, timezone
@@ -13,12 +14,15 @@ from utils.utils import translate_text_to_korean
 
 
 def delete_csv_files():
-    if os.path.exists(DOWNLOADS_DIR):
-        for file in os.listdir(DOWNLOADS_DIR):
-            if file.endswith('.csv'):
-                file_path = os.path.join(DOWNLOADS_DIR, file)
-                os.remove(file_path)
-                logger.info(f"기존 CSV 파일 삭제: {file_path}")
+    try:
+        if os.path.exists(DOWNLOADS_DIR):
+            for file in os.listdir(DOWNLOADS_DIR):
+                if file.endswith('.csv'):
+                    file_path = os.path.join(DOWNLOADS_DIR, file)
+                    os.remove(file_path)
+                    logger.info(f"기존 CSV 파일 삭제: {file_path}")
+    except Exception as e:
+        logger.error(f"기존 CSV 파일 삭제 중 오류 발생: {e}")
 
 
 def check_safe_download():
@@ -53,7 +57,7 @@ def get_last_row_data(csv_file_path):
     last_reason = last_row['reason']
     last_reflection = last_row['reflection']
 
-    # check_time_difference(last_timestamp)
+    check_time_difference(last_timestamp)
 
     return {
         "decision": last_decision,
@@ -67,7 +71,7 @@ def get_last_row_data(csv_file_path):
 def check_time_difference(last_timestamp):
     last_time = datetime.fromisoformat(last_timestamp)
     current_time = datetime.now(timezone.utc) + timedelta(hours=9)
-    time_difference = current_time - last_time
+    time_difference = current_time.replace(tzinfo=None) - last_time
 
     if time_difference > timedelta(minutes=5):
         raise ValueError(f"마지막 타임스탬프가 현재 시간보다 5분 이상 지났습니다. 시간 차이: {time_difference}")
@@ -92,14 +96,14 @@ def calculate_order_amount(decision, percentage, accounts):
     return order_amount
 
 
-def send_trade_email(last_row_data):
+def send_trade_email(last_row_data, result):
     sender_email = os.environ['GOOGLE_EMAIL']
     receiver_email = os.environ['GOOGLE_EMAIL']
     password = os.environ['GOOGLE_PASSWORD']
 
     message = MIMEMultipart()
     message["From"] = sender_email
-    message["To"] = receiver_email
+    message["To"] = receiver_email 
     message["Subject"] = f"암호화폐 거래 알림: {last_row_data['decision']}"
 
     html_body = f"""
@@ -118,6 +122,11 @@ def send_trade_email(last_row_data):
         
             <h3 style="color: #2c3e50; margin: 20px 0 10px 0;">평가</h3>
             <p style="color: #34495e; white-space: pre-line;">{translate_text_to_korean(last_row_data['reflection']).replace('*', '').replace('**', '')}</p>
+
+            <h3 style="color: #2c3e50; margin: 20px 0 10px 0;">주문 결과</h3>
+            <div style="color: #34495e; background-color: #fff; padding: 10px; border-radius: 3px;">
+                <pre style="white-space: pre-wrap; margin: 0;">{json.dumps(result, indent=2, ensure_ascii=False)}</pre>
+            </div>
         </div>
     </div>
     """

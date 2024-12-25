@@ -43,8 +43,6 @@ def download_csv():
         url = 'http://3.35.214.209:8501/'
         driver.get(url)
 
-        time.sleep(1)
-
         csv_file_path = click_download_button(driver)
         return {"message": "Success", "csv_file_path": csv_file_path}
     except Exception as e:
@@ -57,20 +55,22 @@ def download_csv():
 @app.post('/order')
 def order_btc(payload: dict):
     csv_file_path = payload['csv_file_path']
+    if not csv_file_path:
+        csv_file_path = check_safe_download()
     last_row_data = get_last_row_data(csv_file_path)
     decision = last_row_data['decision']
     percentage = float(last_row_data['percentage']) / 100
 
     if decision == 'hold':
-        return {"message": "투자 방향이 'hold'입니다. 투자하지 않습니다."}
+        send_trade_email(last_row_data)
 
     accounts = get_accounts()
     logger.info(f"accounts?????: {accounts}")
     order_amount = calculate_order_amount(decision, percentage, accounts)
-    # result = post_order(decision, order_amount)
-    send_trade_email(last_row_data)
+    result = post_order(decision, order_amount)
+    send_trade_email(last_row_data, result)
 
-    return accounts
+    return result
 
 
 if __name__ == "__main__":
