@@ -6,9 +6,8 @@ from contextlib import asynccontextmanager
 
 from selenium_utils.selenium_settings import init_driver
 from selenium_utils.actions import click_download_button
-from services import calculate_order_amount, check_safe_download, delete_csv_files, get_last_row_data
+from services import calculate_order_amount, check_safe_download, delete_csv_files, get_last_row_data, send_trade_email
 from upbit.apis import get_accounts, post_order
-from utils.utils import translate_text_to_korean
 from utils.logger_config import logger
 from scheduler import start_scheduler
 
@@ -35,23 +34,6 @@ def test_csv():
     return {"message": "CSV 파일 읽기 완료", "last_row_data": last_row_data}
 
 
-@app.post('/order')
-def order_btc(payload: dict):
-    csv_file_path = payload['csv_file_path']
-    last_row_data = get_last_row_data(csv_file_path)
-    decision = last_row_data['decision']
-    percentage = float(last_row_data['percentage']) / 100
-
-    if decision == 'hold':
-        return {"message": "투자 방향이 'hold'입니다. 투자하지 않습니다."}
-
-    accounts = get_accounts()
-    order_amount = calculate_order_amount(decision, percentage, accounts)
-    result = post_order(decision, order_amount)
-
-    return result
-
-
 @app.get("/download-csv")
 def download_csv():
     try:
@@ -70,6 +52,24 @@ def download_csv():
     finally:
         if driver:
             driver.quit()
+
+
+@app.post('/order')
+def order_btc(payload: dict):
+    csv_file_path = payload['csv_file_path']
+    last_row_data = get_last_row_data(csv_file_path)
+    decision = last_row_data['decision']
+    percentage = float(last_row_data['percentage']) / 100
+
+    if decision == 'hold':
+        return {"message": "투자 방향이 'hold'입니다. 투자하지 않습니다."}
+
+    accounts = get_accounts()
+    order_amount = calculate_order_amount(decision, percentage, accounts)
+    # result = post_order(decision, order_amount)
+    send_trade_email(last_row_data)
+
+    return accounts
 
 
 if __name__ == "__main__":

@@ -3,9 +3,13 @@ import time
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta, timezone
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from constants import DOWNLOADS_DIR
 from utils.logger_config import logger
+from utils.utils import translate_text_to_korean
 
 
 def delete_csv_files():
@@ -49,11 +53,7 @@ def get_last_row_data(csv_file_path):
     last_reason = last_row['reason']
     last_reflection = last_row['reflection']
 
-    logger.info(f"마지막 투자 방향: {last_decision}")
-    logger.info(f"마지막 투자 분포율: {last_percentage}")
-    logger.info(f"마지막 타임스탬프: {last_timestamp}")
-
-    check_time_difference(last_timestamp)
+    # check_time_difference(last_timestamp)
 
     return {
         "decision": last_decision,
@@ -90,3 +90,42 @@ def calculate_order_amount(decision, percentage, accounts):
         order_amount = round(btc_balance * percentage, 8)
 
     return order_amount
+
+
+def send_trade_email(last_row_data):
+    sender_email = os.environ['GOOGLE_EMAIL']
+    receiver_email = os.environ['GOOGLE_EMAIL']
+    password = os.environ['GOOGLE_PASSWORD']
+
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = f"암호화폐 거래 알림: {last_row_data['decision']}"
+
+    html_body = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 20px; line-height: 1.6;">
+        <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">거래 정보</h2>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <h3 style="color: #2c3e50; margin-bottom: 10px;">결정</h3>
+            <p style="color: #34495e;">{last_row_data['decision']}</p>
+        
+            <h3 style="color: #2c3e50; margin: 20px 0 10px 0;">비율</h3>
+            <p style="color: #34495e;">{last_row_data['percentage']}%</p>
+        
+            <h3 style="color: #2c3e50; margin: 20px 0 10px 0;">결정 근거</h3>
+            <p style="color: #34495e;">{translate_text_to_korean(last_row_data['reason'])}</p>
+        
+            <h3 style="color: #2c3e50; margin: 20px 0 10px 0;">평가</h3>
+            <p style="color: #34495e; white-space: pre-line;">{translate_text_to_korean(last_row_data['reflection']).replace('*', '').replace('**', '')}</p>
+        </div>
+    </div>
+    """
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, password)
+            message.attach(MIMEText(html_body, "html"))
+            server.send_message(message)
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
