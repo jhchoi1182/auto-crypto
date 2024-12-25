@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from selenium_utils.selenium_settings import init_driver
 from selenium_utils.actions import click_download_button
-from services import calculate_order_amount, check_safe_download, delete_csv_files, get_last_row_data, send_trade_email
+from services import calculate_order_amount, check_safe_download, delete_csv_files, get_last_row_data, send_emergency_email, send_trade_email
 from upbit.apis import get_accounts, post_order
 from utils.logger_config import logger
 from scheduler import start_scheduler
@@ -46,33 +46,35 @@ def download_csv():
         csv_file_path = click_download_button(driver)
         return {"message": "Success", "csv_file_path": csv_file_path}
     except Exception as e:
+        send_emergency_email(e)
         return {"error": str(e)}
     finally:
         if driver:
             driver.quit()
 
 
-@app.get('/order')
-def order_btc():
-    csv_file_path = check_safe_download()
-# def order_btc(payload: dict):
-#     csv_file_path = payload['csv_file_path']
-    # if not csv_file_path:
-    #     csv_file_path = check_safe_download()
-    last_row_data = get_last_row_data(csv_file_path)
-    decision = last_row_data['decision']
-    percentage = float(last_row_data['percentage']) / 100
+@app.post('/order')
+def order_btc(payload: dict):
+    try:
+        csv_file_path = payload['csv_file_path']
+        if not csv_file_path:
+            csv_file_path = check_safe_download()
+        last_row_data = get_last_row_data(csv_file_path)
+        decision = last_row_data['decision']
+        percentage = float(last_row_data['percentage']) / 100
 
-    if decision == 'hold':
-        return {"message": "투자 방향이 'hold'입니다. 투자하지 않습니다."}
+        if decision == 'hold':
+            return send_trade_email(last_row_data)
 
-    accounts = get_accounts()
-    logger.info(f"accounts?????: {accounts}")
-    order_amount = calculate_order_amount(decision, percentage, accounts)
-    # result = post_order(decision, order_amount)
-    # send_trade_email(last_row_data)
+        accounts = get_accounts()
+        order_amount = calculate_order_amount(decision, percentage, accounts)
+        result = post_order(decision, order_amount)
+        send_trade_email(last_row_data, result)
 
-    return accounts
+        return result
+    except Exception as e:
+        send_emergency_email(e)
+        return {"error": str(e)}
 
 
 if __name__ == "__main__":

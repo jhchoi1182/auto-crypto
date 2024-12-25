@@ -70,7 +70,7 @@ def get_last_row_data(csv_file_path):
         last_reason = last_row['reason']
         last_reflection = last_row['reflection']
 
-        # check_time_difference(last_timestamp)
+        check_time_difference(last_timestamp)
 
         return {
             "decision": last_decision,
@@ -81,7 +81,7 @@ def get_last_row_data(csv_file_path):
         }
     except Exception as e:
         logger.error(f"CSV 파일 읽기 중 오류 발생: {e}")
-        return None
+        raise ValueError(f"CSV 파일 읽기 중 오류 발생: {e}")
 
 
 
@@ -113,7 +113,7 @@ def calculate_order_amount(decision, percentage, accounts):
     return order_amount
 
 
-def send_trade_email(last_row_data, result):
+def send_trade_email(last_row_data, result=None):
     sender_email = os.environ['GOOGLE_EMAIL']
     receiver_email = os.environ['GOOGLE_EMAIL']
     password = os.environ['GOOGLE_PASSWORD']
@@ -144,6 +144,36 @@ def send_trade_email(last_row_data, result):
             <div style="color: #34495e; background-color: #fff; padding: 10px; border-radius: 3px;">
                 <pre style="white-space: pre-wrap; margin: 0;">{json.dumps(result, indent=2, ensure_ascii=False)}</pre>
             </div>
+        </div>
+    </div>
+    """
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, password)
+            message.attach(MIMEText(html_body, "html"))
+            server.send_message(message)
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
+
+
+def send_emergency_email(error_message):
+    sender_email = os.environ['GOOGLE_EMAIL']
+    receiver_email = os.environ['GOOGLE_EMAIL']
+    password = os.environ['GOOGLE_PASSWORD']
+
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email 
+    message["Subject"] = f"암호화폐 거래 알림: order 오류!"
+
+    html_body = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 20px; line-height: 1.6;">
+        <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">거래 정보</h2>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <h3 style="color: red; margin-bottom: 10px;">암호화폐 거래 알림: EMERGENCY</h3> 
+            <p style="color: #34495e;">{str(error_message)}</p>
         </div>
     </div>
     """
