@@ -29,7 +29,11 @@ def init_driver():
     options.add_argument("--start-maximized")
     options.add_argument(f"user-agent={user_agent}")
     options.add_argument("--remote-debugging-port=9222")
-
+    
+    # Render 환경에서 Chrome 바이너리 경로 설정
+    chrome_bin = os.environ.get('CHROME_BIN')
+    if chrome_bin:
+        options.binary_location = chrome_bin
 
     # 다운로드 경로 설정
     prefs = {
@@ -42,7 +46,10 @@ def init_driver():
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
 
-    service = Service(ChromeDriverManager().install())
+    # ChromeDriver 경로 설정
+    chromedriver_path = os.environ.get('CHROMEDRIVER_PATH')
+    service = Service(chromedriver_path if chromedriver_path else ChromeDriverManager().install())
+    
     driver: WebDriver = webdriver.Chrome(service=service, options=options)
     driver.execute_script(
         "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
