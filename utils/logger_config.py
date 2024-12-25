@@ -11,16 +11,11 @@ def setup_logger():
 
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-    # 파일 핸들러 설정
-    file_handler = logging.FileHandler('app.log', encoding='utf-8')
-    file_handler.setFormatter(formatter)
-
-    # 콘솔 핸들러 설정
+    # 콘솔 핸들러만 설정
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(formatter)
 
     # 핸들러 추가
-    logger.addHandler(file_handler)
     logger.addHandler(console_handler)
 
     return logger

@@ -57,7 +57,7 @@ def get_last_row_data(csv_file_path):
     last_reason = last_row['reason']
     last_reflection = last_row['reflection']
 
-    check_time_difference(last_timestamp)
+    # check_time_difference(last_timestamp)
 
     return {
         "decision": last_decision,
