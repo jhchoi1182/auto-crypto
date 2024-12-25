@@ -77,6 +77,15 @@ def order_btc(payload: dict):
         return {"error": str(e)}
 
 
+@app.get("/test")
+def download_csv():
+    try:
+        return {"message": "Success"}
+    except Exception as e:
+        send_emergency_email(e)
+        return {"error": str(e)}
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
