@@ -15,20 +15,31 @@ from utils.utils import translate_text_to_korean
 
 def delete_csv_files():
     try:
-        if os.path.exists(DOWNLOADS_DIR):
-            for file in os.listdir(DOWNLOADS_DIR):
-                if file.endswith('.csv'):
-                    file_path = os.path.join(DOWNLOADS_DIR, file)
-                    os.remove(file_path)
-                    logger.info(f"기존 CSV 파일 삭제: {file_path}")
+        if not os.path.exists(DOWNLOADS_DIR):
+            logger.info("다운로드 디렉토리가 존재하지 않습니다.")
+            return
+            
+        csv_files = [f for f in os.listdir(DOWNLOADS_DIR) if f.endswith('.csv')]
+        if not csv_files:
+            logger.info("삭제할 CSV 파일이 없습니다.")
+            return
+            
+        for file in csv_files:
+            file_path = os.path.join(DOWNLOADS_DIR, file)
+            os.remove(file_path)
+            logger.info(f"CSV 파일 삭제됨: {file_path}")
+            
     except Exception as e:
-        logger.error(f"기존 CSV 파일 삭제 중 오류 발생: {e}")
+        logger.error(f"CSV 파일 삭제 중 오류 발생: {e}")
 
 
 def check_safe_download():
     max_wait_time = 10
     wait_time = 0
     csv_file_path = None
+
+    if not os.path.exists(DOWNLOADS_DIR):
+        os.makedirs(DOWNLOADS_DIR)
 
     while wait_time < max_wait_time:
         # downloads 디렉토리의 파일 확인
@@ -42,30 +53,36 @@ def check_safe_download():
         time.sleep(1)
         wait_time += 1
 
+    if not csv_file_path:
+        raise RuntimeError("CSV 파일을 찾을 수 없습니다.")
 
     return csv_file_path
 
 
 def get_last_row_data(csv_file_path):
-    df = pd.read_csv(csv_file_path)
+    try:
+        df = pd.read_csv(csv_file_path)
+        last_row = df.iloc[-1]
+        last_decision = last_row['decision']
+        last_percentage = float(last_row['percentage']) if isinstance(
+            last_row['percentage'], np.number) else last_row['percentage']
+        last_timestamp = last_row['timestamp']
+        last_reason = last_row['reason']
+        last_reflection = last_row['reflection']
 
-    last_row = df.iloc[-1]
-    last_decision = last_row['decision']
-    last_percentage = float(last_row['percentage']) if isinstance(
-        last_row['percentage'], np.number) else last_row['percentage']
-    last_timestamp = last_row['timestamp']
-    last_reason = last_row['reason']
-    last_reflection = last_row['reflection']
+        # check_time_difference(last_timestamp)
 
-    # check_time_difference(last_timestamp)
+        return {
+            "decision": last_decision,
+            "percentage": last_percentage,
+            "timestamp": last_timestamp,
+            "reason": last_reason,
+            "reflection": last_reflection
+        }
+    except Exception as e:
+        logger.error(f"CSV 파일 읽기 중 오류 발생: {e}")
+        return None
 
-    return {
-        "decision": last_decision,
-        "percentage": last_percentage,
-        "timestamp": last_timestamp,
-        "reason": last_reason,
-        "reflection": last_reflection
-    }
 
 
 def check_time_difference(last_timestamp):
