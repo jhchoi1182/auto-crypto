@@ -4,3 +4,5 @@ selenium==4.27.1
 webdriver-manager==4.0.2
 pandas==2.2.3
 deep-translator==1.11.4
+PyJWT==2.10.1
+APScheduler==3.11.0

@@ -8,33 +8,32 @@ from selenium.webdriver.chrome.options import Options
 import os
 import random
 
+from constants import DOWNLOADS_DIR
+
 
 def init_driver():
     user_agent = generate_random_user_agent()
 
-    # 프로젝트 경로 설정
-    project_path = os.path.dirname(os.path.realpath(__file__))
-    downloads_path = os.path.join(project_path, "downloads")
-
     # downloads 디렉토리가 없으면 생성
-    if not os.path.exists(downloads_path):
-        os.makedirs(downloads_path)
+    if not os.path.exists(DOWNLOADS_DIR):
+        os.makedirs(DOWNLOADS_DIR)
 
     # 드라이버 설정
     options = Options()
     options.add_argument("--no-sandbox")
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--start-maximized")
     options.add_argument(f"user-agent={user_agent}")
-    options.add_argument("--remote-debugging-port=9222")  # 디버깅 포트 추가
+    options.add_argument("--remote-debugging-port=9222")
+
 
     # 다운로드 경로 설정
     prefs = {
-        "download.default_directory": downloads_path,
+        "download.default_directory": DOWNLOADS_DIR,
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True

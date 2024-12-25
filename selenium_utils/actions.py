@@ -4,6 +4,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException, NoSuchElementException
+from utils.logger_config import logger
+
+from services import check_safe_download
 
 
 def click_download_button(driver: WebDriver) -> None:
@@ -28,6 +31,9 @@ def click_download_button(driver: WebDriver) -> None:
                 (By.CSS_SELECTOR, "button[data-testid='stBaseButton-elementToolbar']"))
         )
         button.click()
+        csv_file_path = check_safe_download()
+        logger.info(f"다운로드 버튼 클릭 완료: {csv_file_path}")
+        return csv_file_path
     except TimeoutException:
         raise RuntimeError("다운로드 버튼을 찾을 수 없습니다.")
     except ElementClickInterceptedException:
