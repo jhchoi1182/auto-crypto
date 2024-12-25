@@ -116,3 +116,17 @@ Stacktrace:
 2024-12-24 14:13:34,175 - INFO - ë§ˆì§€ë§‰ í–‰ ì •ë³´:
 2024-12-24 14:13:34,175 - INFO - Decision: buy
 2024-12-24 14:13:34,175 - INFO - Percentage: 40.0
+2024-12-25 13:48:59,715 - INFO - ¸¶Áö¸· Çà Á¤º¸:
+2024-12-25 13:48:59,717 - INFO - Decision: buy
+2024-12-25 13:48:59,717 - INFO - Percentage: 40.0
+2024-12-25 13:50:33,704 - INFO - ¸¶Áö¸· Çà Á¤º¸:
+2024-12-25 13:50:33,704 - INFO - Decision: buy
+2024-12-25 13:50:33,704 - INFO - Percentage: 40.0
+2024-12-25 13:50:40,929 - INFO - ¸¶Áö¸· Çà Á¤º¸:
+2024-12-25 13:50:40,929 - INFO - Decision: buy
+2024-12-25 13:50:40,929 - INFO - Percentage: 40.0
+2024-12-25 13:53:27,205 - INFO - ¸¶Áö¸· Çà Á¤º¸:
+2024-12-25 13:53:27,206 - INFO - Decision: buy
+2024-12-25 13:53:27,206 - INFO - Percentage: 40.0
+2024-12-25 13:53:27,206 - INFO - Timestamp: 2024-12-24T12:01:14.334429
+2024-12-25 13:53:27,206 - INFO - Reason: Technical indicators suggest that Bitcoin is currently oversold, with the RSI and Stochastic oscillator indicating potential for a price rebound. The RSI is around 50 on the daily chart and has dropped below 40 on the hourly chart, signaling oversold conditions. The Stochastic K and D values are also low, reinforcing this view. The price is near the lower Bollinger Band, suggesting a potential upward reversal. While the Fear & Greed Index remains high at 73 (Greed), indicating strong investor optimism, the recent price dip presents an opportunity to buy at a lower price and reduce the average buy price of our holdings. Recent news is mixed, but the overall market sentiment remains positive. Considering our previous overcautious approach and aiming to capitalize on potential gains while managing risk, buying 40% of our available funds in Bitcoin aligns with a balanced strategy that incorporates both technical indicators and market sentiment.
