@@ -2,7 +2,7 @@ import time
 import os
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi import FastAPI
 
 from selenium_utils.selenium_settings import init_driver
@@ -91,7 +91,7 @@ def get_last_row_data(csv_file_path):
     last_reason = last_row['reason']
     last_reflection = last_row['reflection']
 
-    # check_time_difference(last_timestamp)
+    check_time_difference(last_timestamp)
 
     logger.info(f"마지막 행 정보:")
     logger.info(f"Decision: {last_decision}")
@@ -111,7 +111,9 @@ def get_last_row_data(csv_file_path):
 
 def check_time_difference(last_timestamp):
     last_time = datetime.fromisoformat(last_timestamp)
-    current_time = datetime.now()
+    
+    # 현재 시간을 UTC로 가져온 후 한국 시간(+9시간)으로 변환
+    current_time = datetime.now(timezone.utc) + timedelta(hours=9)
 
     logger.info(f"마지막 타임스탬프: {last_time}")
     logger.info(f"현재 시간: {current_time}")

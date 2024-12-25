@@ -4,4 +4,3 @@ selenium==4.27.1
 webdriver-manager==4.0.2
 pandas==2.2.3
 deep-translator==1.11.4
-reflex>=0.6.6
