@@ -38,8 +38,6 @@ def auto_crypto():
         result = requests.get(f"{SERVER_URL}/download-csv")
         requests.post(f"{SERVER_URL}/order",
                       json={"csv_file_path": result.json()['csv_file_path']})
-        requests.post(f"{SERVER_URL}/order",
-                      json={"csv_file_path": result.json()['csv_file_path']})
         logger.info(f"스케줄 작업 실행 완료: Upbit API 호출")
     except Exception as e:
         logger.error(f"스케줄된 작업 실행 중 오류 발생: {str(e)}")
