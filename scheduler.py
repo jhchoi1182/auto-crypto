@@ -13,6 +13,12 @@ def start_scheduler():
         minute='3',
         id='upbit_job'
     )
+    scheduler.add_job(
+        check_attendance,
+        'cron',
+        hour='5',
+        id='zzz_attendance_check_job'
+    )
     # scheduler.add_job(
     #     auto_crypto,
     #     'interval',
@@ -20,7 +26,7 @@ def start_scheduler():
     #     id='upbit_job'
     # )
     scheduler.start()
-    logger.info("스케줄러 시작됨 - 매 4시간마다 03분에 실행 (00:03, 04:03, 08:03, 12:03, 16:03, 20:03)")
+    logger.info("스케줄러 시작됨")
     return scheduler
 
 
@@ -30,7 +36,17 @@ def auto_crypto():
         # result = requests.get(f"http://121.163.246.222:10000/download-csv")
         # requests.post(f"http://121.163.246.222:10000/order", json={"csv_file_path": result.json()['csv_file_path']})
         result = requests.get(f"{SERVER_URL}/download-csv")
-        requests.post(f"{SERVER_URL}/order", json={"csv_file_path": result.json()['csv_file_path']})
+        requests.post(f"{SERVER_URL}/order",
+                      json={"csv_file_path": result.json()['csv_file_path']})
         logger.info(f"스케줄 작업 실행 완료: Upbit API 호출")
+    except Exception as e:
+        logger.error(f"스케줄된 작업 실행 중 오류 발생: {str(e)}")
+
+
+def check_attendance():
+    try:
+        logger.info("스케줄 작업 실행: ZZZ 출석 체크 API 호출")
+        requests.get(f"{SERVER_URL}/check-attendance")
+        logger.info(f"스케줄 작업 실행 완료: ZZZ 출석 체크 API 호출")
     except Exception as e:
         logger.error(f"스케줄된 작업 실행 중 오류 발생: {str(e)}")

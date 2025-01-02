@@ -9,7 +9,7 @@ from utils.logger_config import logger
 from services import check_safe_download
 
 
-def click_download_button(driver: WebDriver) -> None:
+def click_download_csv_button(driver: WebDriver) -> None:
     try:
         scroller = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
@@ -40,3 +40,30 @@ def click_download_button(driver: WebDriver) -> None:
         raise RuntimeError("다운로드 버튼을 클릭할 수 없습니다. 다른 요소에 가려져 있을 수 있습니다.")
     except Exception as e:
         raise RuntimeError(f"다운로드 버튼 클릭 중 오류가 발생했습니다: {str(e)}")
+
+
+def click_dialog_close_button(driver: WebDriver) -> None:
+    try:
+        dialog_close = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CLASS_NAME, "components-pc-assets-__dialog_---dialog-close---3G9gO2"))
+        )
+        dialog_close.click()
+        logger.info("다이얼로그 닫기 버튼 클릭 성공")
+    except (TimeoutException, NoSuchElementException):
+        logger.info("다이얼로그 닫기 버튼을 찾는 데 실패했습니다.")
+
+
+def click_today_attendance_check_button(driver: WebDriver) -> None:
+    try:
+        target_image_url = "https://act-webstatic.hoyoverse.com/event-static/2024/06/17/3b211daae47bbfac6bed5b447374a325_3353871917298254056.png"
+        css_selector = f".components-pc-assets-__prize-list_---item---F852VZ[style*='{target_image_url}']"
+
+        prize_item = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector))
+        )
+        prize_item.click()
+        logger.info("오늘 출석 체크 아이템 클릭 성공")
+    except (TimeoutException, NoSuchElementException) as e:
+        logger.error(f"오늘 출석 체크 아이템 클릭 중 오류: {str(e)}")
+        raise

@@ -29,7 +29,7 @@ def init_driver():
     options.add_argument("--start-maximized")
     options.add_argument(f"user-agent={user_agent}")
     options.add_argument("--remote-debugging-port=9222")
-    
+
     # Render 환경에서 Chrome 바이너리 경로 설정
     chrome_bin = os.environ.get('CHROME_BIN')
     if chrome_bin:
@@ -48,8 +48,9 @@ def init_driver():
 
     # ChromeDriver 경로 설정
     chromedriver_path = os.environ.get('CHROMEDRIVER_PATH')
-    service = Service(chromedriver_path if chromedriver_path else ChromeDriverManager().install())
-    
+    service = Service(
+        chromedriver_path if chromedriver_path else ChromeDriverManager().install())
+
     driver: WebDriver = webdriver.Chrome(service=service, options=options)
     driver.execute_script(
         "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
@@ -99,3 +100,35 @@ def generate_random_user_agent():
         user_agent = f"Mozilla/5.0 ({operating_system}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{version} Safari/537.36 Edg/{version}"
 
     return user_agent
+
+
+def set_zzz_cokies(driver: WebDriver):
+    driver.get('https://act.hoyolab.com')
+
+    cookies = {
+        'mi18nLang': 'ko-kr',
+        '_HYVUUID': 'b3e86cc8-7894-4950-99a7-906effde184c',
+        '_MHYUUID': 'f7a2d69f-1531-453b-ab31-12444f4085e5',
+        'DEVICEFP_SEED_ID': '727b5baddb6d043a',
+        'DEVICEFP_SEED_TIME': '1735736692670',
+        'DEVICEFP': '38d7f45b37a8d',
+        '_gid': 'GA1.2.627536408.1735736693',
+        'ltoken_v2': 'v2_CAISDGNpZWF6NGVwZDV2axokYjNlODZjYzgtNzg5NC00OTUwLTk5YTctOTA2ZWZmZGUxODRjIPr61LsGKKG9t9YCMPCG18MBQgpuYXBfZ2xvYmFs.ej11ZwAAAAAB.MEQCID5NRt3eCHKWRmMj0HaAhSU6OG6Kn8RwNbmvNb5HQpNuAiBWoa5X9XOOxB_12dlQxDOoFetFkcimg3G6lmBnVhOjaA',
+        'ltmid_v2': '114ve4xajt_hy',
+        'ltuid_v2': '410370928',
+        'HYV_LOGIN_PLATFORM_OPTIONAL_AGREEMENT': '{"content":[]}',
+        'HYV_LOGIN_PLATFORM_LOAD_TIMEOUT': '{}',
+        'HYV_LOGIN_PLATFORM_TRACKING_MAP': '{"sourceValue":"870"}',
+        '_gat_gtag_UA_206868027_31': '1',
+        'HYV_LOGIN_PLATFORM_LIFECYCLE_ID': '{"value":"5cde244c-48b6-4a28-98b7-655d4998a136"}',
+        '_ga_Y5SZ86WZQH': 'GS1.1.1735801053.3.1.1735802725.0.0.0',
+        '_ga_SBYZMHZRMJ': 'GS1.1.1735801053.3.1.1735802725.0.0.0',
+        '_ga': 'GA1.2.363217342.1735736693'
+    }
+
+    for name, value in cookies.items():
+        driver.add_cookie({
+            'name': name,
+            'value': value,
+            'domain': '.hoyolab.com'
+        })

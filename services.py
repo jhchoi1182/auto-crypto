@@ -18,17 +18,18 @@ def delete_csv_files():
         if not os.path.exists(DOWNLOADS_DIR):
             logger.info("다운로드 디렉토리가 존재하지 않습니다.")
             return
-            
-        csv_files = [f for f in os.listdir(DOWNLOADS_DIR) if f.endswith('.csv')]
+
+        csv_files = [f for f in os.listdir(
+            DOWNLOADS_DIR) if f.endswith('.csv')]
         if not csv_files:
             logger.info("삭제할 CSV 파일이 없습니다.")
             return
-            
+
         for file in csv_files:
             file_path = os.path.join(DOWNLOADS_DIR, file)
             os.remove(file_path)
             logger.info(f"CSV 파일 삭제됨: {file_path}")
-            
+
     except Exception as e:
         logger.error(f"CSV 파일 삭제 중 오류 발생: {e}")
 
@@ -84,14 +85,14 @@ def get_last_row_data(csv_file_path):
         raise ValueError(f"CSV 파일 읽기 중 오류 발생: {e}")
 
 
-
 def check_time_difference(last_timestamp):
     last_time = datetime.fromisoformat(last_timestamp)
     current_time = datetime.now(timezone.utc) + timedelta(hours=9)
     time_difference = current_time.replace(tzinfo=None) - last_time
 
     if time_difference > timedelta(minutes=5):
-        raise ValueError(f"마지막 타임스탬프가 현재 시간보다 5분 이상 지났습니다. 시간 차이: {time_difference}")
+        raise ValueError(
+            f"마지막 타임스탬프가 현재 시간보다 5분 이상 지났습니다. 시간 차이: {time_difference}")
 
 
 def calculate_order_amount(decision, percentage, accounts):
@@ -104,7 +105,7 @@ def calculate_order_amount(decision, percentage, accounts):
             btc_balance = float(account['balance'])
         elif account['currency'] == 'KRW':
             krw_balance = float(account['balance'])
-    
+
     if decision == 'buy':
         order_amount = int(krw_balance * percentage)
     elif decision == 'sell':
@@ -120,7 +121,7 @@ def send_trade_email(last_row_data, result=None):
 
     message = MIMEMultipart()
     message["From"] = sender_email
-    message["To"] = receiver_email 
+    message["To"] = receiver_email
     message["Subject"] = f"암호화폐 거래 알림: {last_row_data['decision']}"
 
     html_body = f"""
@@ -164,7 +165,7 @@ def send_emergency_email(error_message):
 
     message = MIMEMultipart()
     message["From"] = sender_email
-    message["To"] = receiver_email 
+    message["To"] = receiver_email
     message["Subject"] = f"암호화폐 거래 알림: order 오류!"
 
     html_body = f"""

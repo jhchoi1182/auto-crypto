@@ -3,9 +3,14 @@ import time
 from fastapi import FastAPI
 import uvicorn
 from contextlib import asynccontextmanager
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
-from selenium_utils.selenium_settings import init_driver
-from selenium_utils.actions import click_download_button
+from selenium_utils.selenium_settings import init_driver, set_zzz_cokies
+from selenium_utils.actions import click_dialog_close_button, click_download_csv_button, click_today_attendance_check_button
 from services import calculate_order_amount, check_safe_download, delete_csv_files, get_last_row_data, send_emergency_email, send_trade_email
 from upbit.apis import get_accounts, post_order
 from utils.logger_config import logger
@@ -26,24 +31,20 @@ app = FastAPI(lifespan=lifespan)
 # app = FastAPI()
 
 
-@app.get('/test-csv')
+@app.get('/hello')
 def test_csv():
-    csv_file_path = check_safe_download()
-    last_row_data = get_last_row_data(csv_file_path)
-    logger.info(f"side 타입: {last_row_data['decision']}")
-    return {"message": "CSV 파일 읽기 완료", "last_row_data": last_row_data}
+    return {"message": "서버 구동 중..."}
 
 
 @app.get("/download-csv")
 def download_csv():
     try:
-        driver = None
         delete_csv_files()
         driver = init_driver()
         url = 'http://3.35.214.209:8501/'
         driver.get(url)
 
-        csv_file_path = click_download_button(driver)
+        csv_file_path = click_download_csv_button(driver)
         return {"message": "Success", "csv_file_path": csv_file_path}
     except Exception as e:
         send_emergency_email(e)
@@ -74,6 +75,28 @@ def order_btc(payload: dict):
         return result
     except Exception as e:
         send_emergency_email(e)
+        return {"error": str(e)}
+
+
+@app.get('/check-attendance')
+def check_attendance():
+    try:
+        driver = init_driver()
+        set_zzz_cokies(driver)
+        url = 'https://act.hoyolab.com/bbs/event/signin/zzz/e202406031448091.html?act_id=e202406031448091'
+        driver.get(url)
+
+        click_dialog_close_button(driver)
+        time.sleep(3)
+        click_today_attendance_check_button(driver)
+
+        driver.quit()
+        return {"message": "출석 체크 완료"}
+
+    except Exception as e:
+        logger.error(f"ZZZ 출첵 스케줄 중 오류: {str(e)}")
+        if 'driver' in locals():
+            driver.quit()
         return {"error": str(e)}
 
 
