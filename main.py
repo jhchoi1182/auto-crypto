@@ -101,7 +101,7 @@ def check_attendance():
 
 
 @app.get("/knock-knock")
-def download_csv():
+def knock_knock():
     try:
         return {"message": "Success"}
     except Exception as e:

@@ -11,7 +11,7 @@ from services import check_safe_download
 
 def click_download_csv_button(driver: WebDriver) -> None:
     try:
-        scroller = WebDriverWait(driver, 10).until(
+        scroller = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.dvn-scroller.stDataFrameGlideDataEditor"))
         )

@@ -22,7 +22,7 @@ def start_scheduler():
     scheduler.add_job(
         prevent_sleep,
         'interval',
-        minutes=10,
+        minutes=5,
         id='prevent_sleep_job'
     )
     scheduler.start()
