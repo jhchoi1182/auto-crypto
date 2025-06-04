@@ -6,13 +6,13 @@ from utils.logger_config import logger
 
 def start_scheduler():
     scheduler = BackgroundScheduler(timezone='Asia/Seoul')
-    scheduler.add_job(
-        auto_crypto,
-        'cron',
-        hour='0,4,8,12,16,20',
-        minute='3',
-        id='upbit_job'
-    )
+    # scheduler.add_job(
+    #     auto_crypto,
+    #     'cron',
+    #     hour='0,4,8,12,16,20',
+    #     minute='3',
+    #     id='upbit_job'
+    # )
     scheduler.add_job(
         check_attendance,
         'cron',
